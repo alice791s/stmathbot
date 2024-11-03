@@ -2,10 +2,12 @@ import os
 import streamlit as st
 import google.generativeai as genai
 from pathlib import Path
+from dotenv import load_dotenv
 import io
 
+load_dotenv()
 # Configure your API key
-genai.configure(api_key=os.environ["GEMINI_API_KEY"])
+genai.configure(api_key=os.environ['GEMINI_API_KEY'])
 
 # Function to upload and process the image
 def process_image(image_file, question):
