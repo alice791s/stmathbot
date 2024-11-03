@@ -24,7 +24,7 @@ idna==3.10
 urllib3 ==2.2.3
 certifi==2024.8.30
 google-ai-generativelanguage==0.6.10
-google-api-core==2.19.2
+google-api-core==1.49.1
 google-api-python-client==2.137.0
 google-auth==2.27.0
 pydantic ==2.9.2
@@ -51,7 +51,7 @@ pydantic-core==2.23.4
 smmap==5.0.1
 grpcio==1.64.1
 grpcio-status==1.48.2
-pyparsing!==3.2.0
+pyparsing==3.2.0
 MarkupSafe==3.0.2
 attrs==24.2.0
 jsonschema-specifications==2024.10.1
