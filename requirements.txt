@@ -24,7 +24,7 @@ idna==3.10
 urllib3 ==2.2.3
 certifi==2024.8.30
 google-ai-generativelanguage==0.6.10
-google-api-core==2.22.0
+#google-api-core==2.22.0
 google-api-python-client==2.137.0
 google-auth==2.27.0
 pydantic ==2.9.2
@@ -50,7 +50,7 @@ annotated-types==0.7.0
 pydantic-core==2.23.4 
 smmap==5.0.1
 grpcio==1.64.1
-grpcio-status==1.48.2
+#grpcio-status==1.48.2
 pyparsing==3.2.0
 MarkupSafe==3.0.2
 attrs==24.2.0
@@ -60,4 +60,6 @@ rpds-py==0.20.0
 mdurl==0.1.2
 pyasn1==0.6.1
 six==1.16.0
+google-api-core[grpc]
+grpcio-status
 
