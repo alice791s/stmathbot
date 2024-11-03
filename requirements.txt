@@ -1,10 +1,63 @@
-google-ai-generativelanguage==0.6.10 
-Pillow 
-streamlit
-requests
-google-api-core
-google-generativeai==0.8.3
+streamlit==1.39.0
+requests== 2.32.3
+google-generativeai== 0.8.3
+pillow== 10.4.0
+altair==4.2.2
+blinker==1.4
+cachetools==5.5.0
+click==8.1.7
+numpy==1.26.4
+packaging==24.1
+pandas==2.2.2
+protobuf==3.20.3
+pyarrow==17.0.0
+rich==13.9.3
+tenacity==9.0.0
+tom==l0.10.2
+typing-extensions==4.12.2
+gitpython==3.1.43
+pydeck==0.9.1
+tornado==6.3.3
+watchdog==5.0.3
+charset-normalizer==3.4.0
+idna==3.10
+urllib3 ==2.2.3
+certifi==2024.8.30
+google-ai-generativelanguage==0.6.10
 google-api-core==2.19.2
 google-api-python-client==2.137.0
-google-auth>=2.15.0
-protobuf==3.20.*
+google-auth==2.27.0
+pydantic ==2.9.2
+tqdm==4.66.6
+proto-plus=1.25.0
+entrypoints==0.4
+jinja2 ==3.1.4
+jsonschema==4.23.0
+toolz ==0.12.1
+gitdb==4.0.11
+googleapis-common-protos==1.65.0
+pyasn1-modules==0.4.1
+rsa==4.9
+python-dateutil==2.8.2
+pytz==2024.2
+tzdata==2024.2
+markdown-it-py==3.0.0
+pygments==2.18.0
+httplib2==0.22.0
+google-auth-httplib2==0.2.0
+uritemplate==4.1.1
+annotated-types==0.7.0
+pydantic-core==2.23.4 
+smmap==5.0.1
+grpcio==1.64.1
+grpcio-status==1.48.2
+pyparsing!==3.2.0
+MarkupSafe==3.0.2
+attrs==24.2.0
+jsonschema-specifications==2024.10.1
+referencing==0.35.1
+rpds-py==0.20.0
+mdurl==0.1.2
+pyasn1==0.6.1
+six==1.16.0
+
