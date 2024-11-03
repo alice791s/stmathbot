@@ -62,4 +62,4 @@ pyasn1==0.6.1
 six==1.16.0
 google-api-core[grpc]
 grpcio-status
-
+setuptools
