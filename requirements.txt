@@ -63,3 +63,4 @@ six==1.16.0
 google-api-core[grpc]
 grpcio-status
 setuptools
+python-dotenv==1.0.1
