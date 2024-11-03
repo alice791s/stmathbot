@@ -5,7 +5,7 @@ from pathlib import Path
 import io
 
 # Configure your API key
- genai.configure(api_key=os.environ["GEMINI_API_KEY"])
+genai.configure(api_key=os.environ["GEMINI_API_KEY"])
 
 # Function to upload and process the image
 def process_image(image_file, question):
