@@ -2,3 +2,4 @@ google-generativeai
 Pillow 
 streamlit
 requests
+google-api-core
