@@ -3,4 +3,4 @@ Pillow
 streamlit
 requests
 google-api-core
-python3-distutils
+
