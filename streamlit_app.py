@@ -38,7 +38,7 @@ def process_image(image_file, question):
             )
 
         # Initialize the model and generate content
-        model = genai.GenerativeModel("gemini-1.5-flash")
+        model = genai.GenerativeModel("gemini-2.0-flash")
         result = model.generate_content([myfile, "\n\n", prompt])
         return result.text  # Return the generated description
 
