@@ -1,73 +1,98 @@
 import os
 import streamlit as st
 import google.generativeai as genai
-from pathlib import Path
 from dotenv import load_dotenv
-import io
+# import io # Больше не нужен при прямой передаче байт
 
+# Загрузка переменных окружения
 load_dotenv()
-# Configure your API key
-genai.configure(api_key=os.environ['GEMINI_API_KEY'])
 
-# Function to upload and process the image
-def process_image(image_file, question):
-    if image_file is not None:
-        # Read the uploaded file and determine its MIME type
-        image_bytes = image_file.read()
+# Конфигурация API ключа
+api_key = os.getenv('GEMINI_API_KEY')
+if not api_key:
+    st.error("API ключ GEMINI_API_KEY не найден. Пожалуйста, определите его в файле .env или переменных окружения.")
+    st.stop() # Остановить приложение, если ключ отсутствует
+try:
+    genai.configure(api_key=api_key)
+except Exception as e:
+    st.error(f"Ошибка конфигурации Gemini API: {e}")
+    st.stop()
+
+# Функция для обработки изображения и генерации ответа
+def process_image(image_file, question: str):
+    """
+    Обрабатывает загруженный файл изображения и вопрос пользователя,
+    отправляет их модели Gemini и возвращает сгенерированный ответ.
+    """
+    if image_file is None:
+        # Эта проверка больше для внутренней логики, Streamlit UI должен это предотвращать
+        return None
+
+    try:
+        image_bytes = image_file.getvalue() # Получаем байты напрямую из UploadedFile
         mime_type = image_file.type
 
-        # Create a BytesIO object to pass to the upload function
-        image_io = io.BytesIO(image_bytes)
+        image_part = {
+            "mime_type": mime_type,
+            "data": image_bytes
+        }
 
-        # Upload the file with the specified MIME type
-        myfile = genai.upload_file(image_io, mime_type=mime_type)
-
-        # Prepare the prompt based on user input
+        # Формирование промпта
+        base_prompt_text = (
+            "Проанализируйте математическое содержание на этом изображении. "
+            "Предоставьте подробное объяснение задачи, шаги решения и окончательный ответ. "
+            "Убедитесь, что все математические выражения правильно оформлены с помощью LaTeX."
+            "using LaTeX within $...$ for inline math and $$...$$ for block math."
+        )
+        
+        content_for_model = [image_part] # Начинаем с изображения
+        
         if question:
-            prompt = (
-                f"Analyze the mathematical content in this image. "
-                f"Answer the following question: {question}. "
-                "Provide a detailed explanation of the problem, the solution steps, "
-                "and the final answer. Make sure to format any mathematical expressions correctly."
-            )
+            content_for_model.append(f"{base_prompt_text} Answer the following question: {question}")
         else:
-            prompt = (
-                "Analyze the mathematical content in this image. "
-                "Provide a detailed explanation of the problem, the solution steps, "
-                "and the final answer. Make sure to format any mathematical expressions correctly."
-            )
+            content_for_model.append(base_prompt_text)
+        
+        # Инициализация модели
+        # ВАЖНО: "gemini-2.0-flash" может быть неактуальным.
+        # Рекомендуется "gemini-1.5-flash-latest" или другая актуальная мультимодальная модель.
+        # Убедитесь, что выбранная модель поддерживает обработку изображений.
+        model_name = os.getenv("GEMINI_MODEL_NAME", "gemini-1.5-flash-latest")
+        model = genai.GenerativeModel(model_name)
+        
+        # Генерация контента
+        response = model.generate_content(content_for_model)
+            
+        return response.text
 
-        # Initialize the model and generate content
-        model = genai.GenerativeModel("gemini-2.0-flash")
-        result = model.generate_content([myfile, "\n\n", prompt])
-        return result.text  # Return the generated description
+    except Exception as e:
+        st.error(f"Произошла ошибка при взаимодействии с Gemini API: {e}")
+        # Для отладки можно добавить:
+        # import traceback
+        # st.error(traceback.format_exc())
+        return None
 
-# Streamlit interface
-st.title("🎓Ваш персональный репетитор")  # Title for the app
-st.write("Загрузите изображение с математической задачей и введите свой вопрос ниже.")  # Instructions in Russian
+# Streamlit интерфейс
+st.title("🎓 Ваш персональный репетитор по математике")
+st.write("Загрузите изображение с математической задачей и, при необходимости, задайте уточняющий вопрос.")
 
-# File uploader
-uploaded_file = st.file_uploader("Выберите изображение", type=["jpg", "jpeg", "png"])
+# Загрузчик файлов
+uploaded_file = st.file_uploader("Выберите файл изображения", type=["jpg", "jpeg", "png"])
 
-# Text input for additional question
-user_question = st.text_input("Введите ваш вопрос:", "")  # Prompt in Russian
+# Поле для ввода вопроса
+user_question = st.text_input("Ваш вопрос (необязательно):", "")
 
-# Button to submit the question
-if st.button("Отправить"):  # Button label in Russian
-    if uploaded_file and user_question:
-        # Process the image and get the answer
-        answer = process_image(uploaded_file, user_question)
+# Кнопка для отправки
+if st.button("🔍 Проанализировать и решить"):
+    if uploaded_file:
+        with st.spinner("Анализирую изображение и генерирую ответ... Пожалуйста, подождите ✨"):
+            answer = process_image(uploaded_file, user_question)
+        
         if answer:
-            # Show only the final answer
-            st.subheader("Ответ:")
-            st.write(answer)
-        else:
-            st.write("Не удалось получить ответ. Попробуйте снова.")
-    elif uploaded_file:  # Handle case where only the image is uploaded
-        answer = process_image(uploaded_file, "")
-        if answer:
-            st.subheader("Ответ:")
-            st.write(answer)
+            st.subheader("📝 Решение:")
+            st.markdown(answer) # Используем markdown для корректного отображения LaTeX
+        # else: # Сообщение об ошибке теперь выводится внутри process_image
+            # st.error("Не удалось получить ответ. Попробуйте еще раз или проверьте консоль на ошибки.")
     else:
-        st.write("Пожалуйста, загрузите изображение и введите ваш вопрос.")  # Validation message in Russian
+        st.warning("⚠️ Пожалуйста, сначала загрузите изображение.")
 
+st.caption("Работает AI")
